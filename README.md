@@ -1,3 +1,3 @@
-Melody Generation Project
+#Melody Generation Project
 
 Final Project for Data Science 2
