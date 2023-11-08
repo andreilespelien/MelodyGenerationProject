@@ -1,4 +1,5 @@
 # Melody Generation Project
 
 Final Project for Data Science 2
-Dataset of http://g.co/magenta/maestro-dataset
+
+[Download data](https://www.kaggle.com/datasets/jackvial/themaestrodatasetv2) and extract into folder
