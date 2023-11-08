@@ -1,7 +1,5 @@
 tensorflow
 numpy
 matplotlib
-os
 mido
-csv
 pandas
