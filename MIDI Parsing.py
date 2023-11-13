@@ -17,9 +17,9 @@ class MIDIParser:
         
         folders = os.listdir(dataPath)
         for folder in folders:
-            if folder.isdigit:
+            # if folder.isdigit:
+            if folder == "2018":
                 print(folder)
-            # if folder == "2018":
                 files = os.listdir(dataPath + "/" + folder)
                 c = 0
                 for file in files:
@@ -59,32 +59,24 @@ class MIDIParser:
             timestamp += msg.time
             currchord.timestamp = timestamp
             currnotes[msg.note] = int(msg.velocity != 0)
-            # allnotes[timestamp] = currnotes
-            print(currnotes.count(1))
 
-            # print(msg)
             for note in range(len(currnotes)):
-                # print(timestamp)
                 if currnotes[note] == 1 and note not in currchord.notes:
+                    # allnotes[timestamp][note] = 1
                     currchord.notes.append(note)
-                    # print(note)
             
             if msg.time > 0:
                 chords.append(currchord)
                 currchord = Chord()
 
-        # plt.imshow(allnotes[938:939])
         # transpose = []
         # for i in range(len(allnotes[0])):
-        #     row = []
-        #     for j in allnotes[928:948]:
-        #         row.append(j[i])
-        #         transpose.append(row)
-        # plt.imshow(transpose)
-        # plt.show()
+        #     row2 = []
+        #     for row1 in allnotes:
+        #         row2.append(row1[i])
+        #     transpose.append(row2)
+        # plt.imshow(transpose, origin = "lower")
 
-        for chord in chords[:100]:
-            print(len(chord.notes), chord.timestamp)
         return chords
 
 #------------------------------------------------------------------------------------------------------------------------
@@ -116,12 +108,14 @@ class MIDIParser:
                 for note in chord.notes:
                     times.append(chord.timestamp)
                     notes.append(note)
-
-            print(times[:100])
+            # for i in range(len(chords)):
+            #     for note in chords[i].notes:
+            #         times.append(i)
+            #         notes.append(note)
             
-            plt.scatter(times[:100], notes[:100], c = [random.random(), random.random(), random.random()])
+            plt.scatter(times[:1000], notes[:1000], c = [random.random(), random.random(), random.random()])
         plt.show()
 
 
-parser = MIDIParser("dataTemp") # maestro-v2.0.0
+parser = MIDIParser("maestro-v2.0.0") # maestro-v2.0.0
 parser.plotData()
