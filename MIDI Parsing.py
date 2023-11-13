@@ -19,19 +19,17 @@ class MIDIParser:
         for folder in folders:
             # if folder.isdigit:
             if folder == "2018":
-                print(folder)
                 files = os.listdir(dataPath + "/" + folder)
                 c = 0
                 for file in files:
-                    print(c)
+                    print(str(c) + "/" + str(len(files)) + " files read in folder \"" + folder + "\"")
                     c += 1
                     if file[-4:] == "midi":
                         self.data[folder + "/" + file] = MidiFile(dataPath + "/" + folder + "/" + file)
-        print(self.data.keys())
+        # print(self.data.keys())
 
         index = pd.read_csv("maestro-v2.0.0/maestro-v2.0.0.csv", encoding = "utf-8-sig")
         index = index.sort_values(by = "midi_filename", ignore_index = True)
-        index["midi_filename"]
         # print(index)
 
     def findFile(self, fileName):
@@ -97,7 +95,7 @@ class MIDIParser:
     def plotData(self):
         c = 0
         for song in self.data.values():
-            print(c)
+            print(str(c) + "/" + str(len(self.data.values())) + " files parsed and plotted")
             c += 1
 
             chords = self.parseSong(song)
@@ -113,9 +111,11 @@ class MIDIParser:
             #         times.append(i)
             #         notes.append(note)
             
-            plt.scatter(times[:1000], notes[:1000], c = [random.random(), random.random(), random.random()])
+            plt.scatter(times[:1000], notes[:1000], color = [random.random(), random.random(), random.random()])
         plt.show()
 
+#------------------------------------------------------------------------------------------------------------------------
 
-parser = MIDIParser("maestro-v2.0.0") # maestro-v2.0.0
-parser.plotData()
+# Use "dataTemp" or "maestro-v2.0.0"
+# parser = MIDIParser("maestro-v2.0.0") 
+# parser.plotData()
