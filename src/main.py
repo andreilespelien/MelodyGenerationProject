@@ -1,12 +1,3 @@
-from keras.preprocessing.text import Tokenizer
-import nltk
-from nltk.tokenize import word_tokenize
-import numpy as np
-import re
-from keras.utils import to_categorical
-
-
-
 #model build
 from keras.models import Sequential
 from keras.layers import Dense
@@ -27,3 +18,15 @@ print(model.summary())
 # model.compile(loss='categorical_crossentropy', optimizer ='adam', metrics=['accuracy'])
 # model.fit(train_inputs, train_targets, epochs=500,verbose=1)
 # model.save("mymodel.h5")
+
+#predicting words
+from keras.preprocessing.sequence import pad_sequences
+
+input_text = input().strip().lower()
+encoded_text = tokenizer.texts_to_sequences([input_text])[0]
+pad_encoded = pad_sequences([encoded_text], maxlen=seq_len, truncating='pre')
+print(encoded_text, pad_encoded)
+
+for i in (model.predict(pad_encoded)[0]).argsort()[-3:][::-1]:
+    pred_word=tokenizer.index_word[i]
+    print("Next word suggestion:", pred_word)
