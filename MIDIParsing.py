@@ -13,12 +13,10 @@ class MIDIParser:
     index = []
 
     def __init__(self, dataPath):
-        # dataPath = "maestro-v2.0.0"
-        
         folders = os.listdir(dataPath)
         for folder in folders:
-            # if folder.isdigit:
-            if folder == "2018":
+            if folder.isdigit and folder not in ["LICENSE", "maestro-v2.0.0.csv", "maestro-v2.0.0.json", "README"]:
+            # if folder == "2018":
                 files = os.listdir(dataPath + "/" + folder)
                 c = 0
                 for file in files:
@@ -94,6 +92,9 @@ class MIDIParser:
 
     def plotData(self):
         c = 0
+        maxchord = -1
+        minnote = 128
+        maxnote = 0
         for song in self.data.values():
             print(str(c) + "/" + str(len(self.data.values())) + " files parsed and plotted")
             c += 1
@@ -106,16 +107,69 @@ class MIDIParser:
                 for note in chord.notes:
                     times.append(chord.timestamp)
                     notes.append(note)
+                    if note < minnote:
+                        minnote = note
+                    if note > maxnote:
+                        maxnote = note
             # for i in range(len(chords)):
             #     for note in chords[i].notes:
             #         times.append(i)
             #         notes.append(note)
             
-            plt.scatter(times[:1000], notes[:1000], color = [random.random(), random.random(), random.random()])
+            maxcurr = max([len(chord.notes) for chord in chords])
+            if maxcurr > maxchord:
+                maxchord = maxcurr
+
+            # plt.scatter(times[:1000], notes[:1000], color = [random.random(), random.random(), random.random()])
+        print(maxchord)
+        print(minnote, maxnote)
         plt.show()
 
 #------------------------------------------------------------------------------------------------------------------------
 
+    def returnData(self, seqlen):
+        sequences = []
+        seen = {}
+        c = 0
+        for song in self.data.values():
+            print(str(c) + "/" + str(len(self.data.values())) + " files parsed")
+            c += 1
+
+            chords = self.parseSong(song)
+            allchords = []
+
+            for chord in chords:
+                chordbinary = ""
+                for note in range(108, 20, -1):
+                    chordbinary += str(int(note in chord.notes))
+                
+                binary = int(chordbinary, base = 2)
+                allchords.append(binary)
+                seen[binary] = 1
+            
+            for i in range(seqlen, len(allchords)):
+                sequences.append(allchords[i - seqlen : i])
+        
+        enums = enumerate(seen.keys())
+        codes = {}
+        for code, elem in enums:
+            # print(code, elem)
+            codes[elem] = code
+
+        sequencesENUM = []
+        for sequence in sequences:
+            sequenceENUM = []
+            for i in range(len(sequence)):
+                elem = sequence[i]
+                sequenceENUM.append(codes[elem])
+            sequencesENUM.append(sequenceENUM)
+
+        return sequencesENUM, len(seen.keys())
+                
+
 # Use "dataTemp" or "maestro-v2.0.0"
-# parser = MIDIParser("maestro-v2.0.0") 
+# parser = MIDIParser("maestro-v2.0.0")
 # parser.plotData()
+
+# c, sequences = parser.returnData(3)
+# print(c)
